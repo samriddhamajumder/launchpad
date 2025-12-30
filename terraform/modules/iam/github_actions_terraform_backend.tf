@@ -28,7 +28,7 @@ resource "aws_iam_role_policy" "github_actions_terraform_backend" {
           "dynamodb:DeleteItem",
           "dynamodb:DescribeTable"
         ]
-        Resource = "arn:aws:dynamodb:us-east-1:*:YOUR_LOCK_TABLE"
+        Resource = "arn:aws:dynamodb:us-east-1:*:launchpad-table-dynamodb"
       },
 
       # 🔴 Adding this block
