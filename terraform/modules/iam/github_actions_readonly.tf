@@ -7,13 +7,22 @@ resource "aws_iam_role_policy" "github_actions_read_only" {
       {
         Effect = "Allow"
         Action = [
+          # EC2 read (VPC, subnets, attributes)
           "ec2:Describe*",
+
+          # IAM read (Terraform REQUIRED)
           "iam:GetRole",
           "iam:ListRolePolicies",
+          "iam:GetRolePolicy",
+          "iam:ListAttachedRolePolicies",
           "iam:GetOpenIDConnectProvider",
           "iam:ListOpenIDConnectProviders",
+
+          # ECR read
           "ecr:DescribeRepositories",
           "ecr:ListTagsForResource",
+
+          # S3 backend read
           "s3:GetObject",
           "s3:ListBucket"
         ]
