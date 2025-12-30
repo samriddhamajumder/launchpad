@@ -4,6 +4,7 @@ resource "aws_iam_role_policy" "github_actions_terraform_backend" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      # S3 backend access
       {
         Effect = "Allow"
         Action = [
@@ -17,6 +18,8 @@ resource "aws_iam_role_policy" "github_actions_terraform_backend" {
           "arn:aws:s3:::launchpad-s3-bucket-99/*"
         ]
       },
+
+      # DynamoDB state lock
       {
         Effect = "Allow"
         Action = [
@@ -25,7 +28,26 @@ resource "aws_iam_role_policy" "github_actions_terraform_backend" {
           "dynamodb:DeleteItem",
           "dynamodb:DescribeTable"
         ]
-        Resource = "arn:aws:dynamodb:us-east-1:*:table/launchpad-table-dynamodb"
+        Resource = "arn:aws:dynamodb:us-east-1:*:YOUR_LOCK_TABLE"
+      },
+
+      # 🔴 Adding this block
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeRouteTables",
+          "ec2:DescribeInternetGateways",
+          "ec2:DescribeSecurityGroups",
+          "iam:GetRole",
+          "iam:GetOpenIDConnectProvider",
+          "iam:ListRoles",
+          "ecr:DescribeRepositories",
+          "ecr:ListTagsForResource"
+        ]
+        Resource = "*"
       }
     ]
   })
