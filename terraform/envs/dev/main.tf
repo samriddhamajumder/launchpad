@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "D:/Launchpad/terraform/modules/vpc"
+  source = "../../modules/vpc"
 
   project     = var.project
   environment = var.environment
@@ -7,39 +7,38 @@ module "vpc" {
 }
 
 module "eks" {
-   count  = var.enable_eks ? 1 : 0
-   source = "D:/Launchpad/terraform/modules/eks"
+  count  = var.enable_eks ? 1 : 0
+  source = "../../modules/eks"
 
   project     = var.project
   environment = var.environment
 
-  vpc_id         = module.vpc.vpc_id
+  vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
 }
 
 module "ecr" {
-  source = "D:/Launchpad/terraform/modules/ecr"
+  source = "../../modules/ecr"
 
   project     = var.project
   environment = var.environment
 }
 
 module "iam" {
-  source = "D:/Launchpad/terraform/modules/iam"
+  source = "../../modules/iam"
 
   project     = var.project
   environment = var.environment
-  #eks_oidc_arn = module.eks.oidc_provider_arn
-  #eks_oidc_arn = null
+  # eks_oidc_arn = module.eks[0].oidc_provider_arn
+  # eks_oidc_arn = null
 }
 
 module "alb" {
   count  = var.enable_alb ? 1 : 0
-  source = "D:/Launchpad/terraform/modules/alb"
+  source = "../../modules/alb"
 
   project     = var.project
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
   subnets     = module.vpc.public_subnets
 }
-
